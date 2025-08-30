@@ -1,0 +1,95 @@
+<ddz_image>
+  <id>12062</id>
+  <digiid>100800_148_01_01</digiid>
+  <knr>D0001_1</knr>
+  <version>0.1.17.0</version>
+  <width>1871</width>
+  <height>2024</height>
+  <tlayers>
+    <tlayer nr="001" clayer="010" type="G" mode="ADD" name="Gradnetz_txt"></tlayer>
+    <tlayer nr="002" clayer="020" type="T" mode="ADD" name="VorherrschendeWinde_txt"></tlayer>
+    <tlayer nr="003" clayer="050" type="T" mode="ADD" name="Orte_txt"></tlayer>
+    <tlayer nr="004" clayer="050" type="G" mode="ADD" name="Orte_sig"></tlayer>
+    <tlayer nr="005" clayer="020" type="G" mode="ADD" name="VorherrschendeWinde_lin"></tlayer>
+    <tlayer nr="006" clayer="040" type="G" mode="ADD" name="InnertropischeKonvergenzzone_lin"></tlayer>
+    <tlayer nr="007" clayer="010" type="G" mode="ADD" name="Gradnetz_lin"></tlayer>
+    <tlayer nr="008" clayer="060" type="G" mode="MULT" name="Staatsgrenzen_lin"></tlayer>
+    <tlayer nr="009" clayer="000" type="G" mode="ADD" name="Grundkarte_lin"></tlayer>
+    <tlayer nr="010" clayer="030" type="G" mode="ADD" name="Temperaturen_fla"></tlayer>
+    <tlayer nr="011" clayer="000" type="G" mode="ADD" name="Grundkarte_fla"></tlayer>
+  </tlayers>
+  <clayers>
+    <clayer nr="000" radio="C" name="Grundkarte"></clayer>
+    <clayer nr="010" radio="C" name="Gradnetz"></clayer>
+    <clayer nr="020" radio="C" name="Vorherrschende Winde"></clayer>
+    <clayer nr="030" radio="C" name="Temperaturen im Januar" starter="1"></clayer>
+    <clayer nr="040" radio="C" name="Innertropische Konvergenzzone[Zeilenumbruch](ITCZ) im Januar" starter="1"></clayer>
+    <clayer nr="050" radio="C" name="Orte" starter="1"></clayer>
+    <clayer nr="060" radio="C" name="Staatsgrenzen"></clayer>
+  </clayers>
+  <georef>
+    <projection>
+      <type>Lambert_Azimuthal_Equal_Area</type>
+      <datum>
+        <name>WGS 1984</name>
+        <semimajoraxis>6378137</semimajoraxis>
+        <flattening>298.25722356300003</flattening>
+      </datum>
+      <param>
+        <name>false_easting</name>
+        <value>0</value>
+      </param>
+      <param>
+        <name>false_northing</name>
+        <value>0</value>
+      </param>
+      <param>
+        <name>latitude_of_center</name>
+        <value>0</value>
+      </param>
+      <param>
+        <name>longitude_of_center</name>
+        <value>15</value>
+      </param>
+      <param>
+        <name>xy_plane_rotation</name>
+        <value>0</value>
+      </param>
+    </projection>
+    <scale>72037029.81277760863304</scale>
+    <anchor>
+      <x>935.5</x>
+      <y>1012</y>
+      <lon>18.21422033457805</lon>
+      <lat>2.69497116456393</lat>
+    </anchor>
+    <rotation>0</rotation>
+  </georef>
+  <legend>
+    <le nr="000" type="U" text="Vorherrschende Winde" clayers="020_K"></le>
+    <le nr="001" type="L" text="schwacher Wind" clayers="020_K"></le>
+    <le nr="002" type="L" text="mäßiger bis starker Wind" clayers="020_K"></le>
+    <le nr="003" type="=" clayers="030_K"></le>
+    <le nr="004" type="U" text="Temperaturen im Januar (Monatsmittel)" clayers="030_K"></le>
+    <le nr="005" type="S" text="in Grad Celsius" clayers="030_K"></le>
+    <le nr="006" type="L" text="30 bis 35" clayers="030_K"></le>
+    <le nr="007" type="L" text="25 bis 30" clayers="030_K"></le>
+    <le nr="008" type="L" text="20 bis 25" clayers="030_K"></le>
+    <le nr="009" type="L" text="15 bis 20" clayers="030_K"></le>
+    <le nr="010" type="L" text="10 bis 15" clayers="030_K"></le>
+    <le nr="011" type="L" text="5 bis 10" clayers="030_K"></le>
+    <le nr="012" type="L" text="0 bis 5" clayers="030_K"></le>
+    <le nr="013" type="L" text="–5 bis 0" clayers="030_K"></le>
+    <le nr="014" type="L" text="–10 bis –5" clayers="030_K"></le>
+    <le nr="015" type="L" text="unter –10" clayers="030_K"></le>
+    <le nr="016" type="=" clayers="040_K"></le>
+    <le nr="017" type="U" text="Tiefdruckrinne" clayers="040_K"></le>
+    <le nr="018" type="L" text="Innertropische Konvergenzzone (ITCZ)[Zeilenumbruch]im Januar" clayers="040_K"></le>
+    <le nr="019" type="=" clayers="050_K"></le>
+    <le nr="020" type="U" text="Siedlungen" clayers="050_K"></le>
+    <le nr="021" type="L" text="Ort" clayers="050_K"></le>
+    <le nr="022" type="=" clayers="060_K"></le>
+    <le nr="023" type="U" text="Grenzen" clayers="060_K"></le>
+    <le nr="024" type="L" text="Staatsgrenze" clayers="060_K"></le>
+  </legend>
+</ddz_image>
