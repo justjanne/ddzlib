@@ -1,41 +1,36 @@
-use crate::Error;
-use nom::{IResult, Offset};
-use std::fs::File;
 use std::io::{BufRead, BufReader};
-use std::path::Path;
+use std::fs::File;
+use nom::{IResult, Offset};
+use crate::Error;
 
-pub(crate) fn read_file<F, P: AsRef<Path>, O>(parser: &mut F, file: P) -> Result<O, Error>
+pub fn read_buffer<F, T>(mut parser: F, file: &mut BufReader<File>) -> Result<T, Error>
 where
-    F: FnMut(&[u8]) -> IResult<&[u8], O>,
+    F: FnMut(&[u8]) -> IResult<&[u8], T>,
 {
-    let file = File::open(file).map_err(|e| Error {
-        message: format!("Could not open file: {0}", e),
-    })?;
-    let mut buf = BufReader::new(file);
     loop {
-        let opt = match parser(buf.buffer()) {
-            Ok((data, parsed)) => Some((buf.buffer().offset(data), parsed)),
+        let opt = match parser(file.buffer()) {
+            Ok((data, parsed)) => Some((file.buffer().offset(data), parsed)),
             Err(nom::Err::Incomplete(_)) => None,
             Err(nom::Err::Error(e)) => {
-                return Err(Error {
-                    message: format!("could not parse tileset: {:#?}", e),
+                break Err(Error {
+                    message: format!("could not parse buffer: {:#?}", e),
                 });
             }
             Err(nom::Err::Failure(e)) => {
-                return Err(Error {
-                    message: format!("could not parse tileset: {:#?}", e),
+                break Err(Error {
+                    message: format!("could not parse buffer: {:#?}", e),
                 });
             }
         };
 
         match opt {
             Some((sz, o)) => {
-                buf.consume(sz);
-                return Ok(o);
+                file.consume(sz);
+                break Ok(o);
             }
             None => {
-                buf.fill_buf().map_err(|e| Error {
-                    message: format!("could not read tileset: {:#?}", e),
+                file.fill_buf().map_err(|e| Error {
+                    message: format!("could not read buffer: {:#?}", e),
                 })?;
             }
         }

@@ -1,66 +1,49 @@
-use crate::error::Error;
-use crate::file_type::{read_file_type, FileType};
-use crate::util::read_file;
-use crate::zoom_level::read_zoom_level;
-use crate::zoom_level_entry::read_zoom_level_entry;
-use crate::ZoomLevel;
-use nom::combinator::{flat_map, map};
-use nom::multi::count;
-use nom::number::streaming::le_u32;
-use nom::sequence::tuple;
-use nom::IResult;
+use crate::tile_header::read_tile_header;
+use crate::tileset_meta::read_tileset;
+use crate::{util, Error, TilesetMeta};
+use std::fs::File;
+use std::io::{BufReader, Read, Seek, SeekFrom};
 use std::path::Path;
 
 #[derive(Debug)]
 pub struct Tileset {
-    pub file_type: FileType,
-    pub version: u32,
-    pub width: u32,
-    pub height: u32,
-    pub zoom_levels: Vec<ZoomLevel>,
+    pub meta: TilesetMeta,
+    file: BufReader<File>,
 }
 
 impl Tileset {
     pub fn from_file<P: AsRef<Path>>(file: P) -> Result<Tileset, Error> {
-        read_file(&mut read_tileset, file)
+        let file = File::open(file).map_err(|e| Error {
+            message: format!("Could not open file: {0}", e),
+        })?;
+        let mut file = BufReader::new(file);
+        let meta = util::read_buffer(read_tileset, &mut file)?;
+        Ok(Tileset { meta, file })
     }
-}
 
-pub(crate) fn read_tileset(input: &[u8]) -> IResult<&[u8], Tileset> {
-    map(
-        tuple((
-            read_file_type,    // file_type
-            le_u32,            // version
-            count(le_u32, 2),  // unknown
-            le_u32,            // width
-            le_u32,            // height
-            count(le_u32, 18), // unknown
-            flat_map(
-                tuple((
-                    read_zoom_level_entry,
-                    read_zoom_level_entry,
-                    read_zoom_level_entry,
-                    read_zoom_level_entry,
-                )),
-                |(level0, level1, level2, level3)| {
-                    map(
-                        tuple((
-                            read_zoom_level(level0),
-                            read_zoom_level(level1),
-                            read_zoom_level(level2),
-                            read_zoom_level(level3),
-                        )),
-                        |(level0, level1, level2, level3)| vec![level0, level1, level2, level3],
-                    )
-                },
-            ),
-        )),
-        move |(file_type, version, _, width, height, _, zoom_levels)| Tileset {
-            file_type,
-            version,
-            width,
-            height,
-            zoom_levels,
-        },
-    )(input)
+    pub fn read_tile(&mut self, zoom_level: usize, x: u32, y: u32) -> Result<Vec<u8>, Error> {
+        let zoom_level = self.meta.zoom_levels.get(zoom_level).ok_or(Error {
+            message: format!("zoom_level out of bounds: {0}", zoom_level),
+        })?;
+        let tile = zoom_level
+            .tiles
+            .get((y * zoom_level.columns + x) as usize)
+            .ok_or(Error {
+                message: format!(
+                    "coordinates out of bound: {}:{} for zoom level with {}x{} tiles",
+                    x, y, zoom_level.columns, zoom_level.rows
+                ),
+            })?;
+        self.file
+            .seek(SeekFrom::Start(tile.offset as u64))
+            .map_err(|e| Error {
+                message: format!("could not seek to tile: {0}", e),
+            })?;
+        let header = util::read_buffer(read_tile_header, &mut self.file)?;
+        let mut buf = vec![0; header.length as usize];
+        self.file.read_exact(&mut buf).map_err(|e| Error {
+            message: format!("could not read tile: {0}", e),
+        })?;
+        Ok(buf)
+    }
 }

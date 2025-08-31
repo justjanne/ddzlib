@@ -3,7 +3,7 @@ use nom::number::streaming::le_u32;
 use nom::sequence::tuple;
 use nom::IResult;
 
-#[derive(Debug)]
+#[derive(Debug, Copy, Clone, Eq, PartialEq)]
 pub struct TileEntry {
     pub offset: u32,
     pub length: u32,
