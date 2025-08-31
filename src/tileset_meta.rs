@@ -8,7 +8,7 @@ use nom::number::streaming::le_u32;
 use nom::sequence::tuple;
 use nom::IResult;
 
-#[derive(Debug)]
+#[derive(Clone, Debug)]
 pub struct TilesetMeta {
     pub file_type: FileType,
     pub version: u32,

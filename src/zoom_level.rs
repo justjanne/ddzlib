@@ -4,7 +4,7 @@ use nom::IResult;
 use nom::combinator::map;
 use nom::multi::count;
 
-#[derive(Debug)]
+#[derive(Clone, Debug)]
 pub struct ZoomLevel {
     pub columns: u32,
     pub rows: u32,
